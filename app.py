@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # ---------------------------------------------------------
-# 1. KONFIGURASI HALAMAN & ELEMEN DESAIN UI/UX (Poin III.4)
+# 1. KONFIGURASI HALAMAN (UI/UX)
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="Dashboard Analytics E-Commerce | UTS Visdat",
@@ -31,28 +31,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 2. LOAD DATASET DARI KAGGLE (Memenuhi Poin II.1)
+# 2. LOAD DATASET KAGGLE
 # ---------------------------------------------------------
 @st.cache_data
 def load_data():
     # Membaca file CSV dengan pemisah titik koma (;)
     df = pd.read_csv('data/ecommerce sales Dataset.csv', sep=';')
-    
-    # Konversi tanggal (serial Excel / format Date)
-    if 'Order_Date' in df.columns:
-        df['Tanggal'] = pd.to_datetime(df['Order_Date'], unit='D', origin='1899-12-30', errors='coerce')
-        # Jika ada error parsing tanggal, isi default
-        if df['Tanggal'].isnull().all():
-            df['Tanggal'] = pd.to_datetime('2026-01-01')
-    else:
-        df['Tanggal'] = pd.to_datetime('2026-01-01')
-        
     return df
 
 df_raw = load_data()
 
 # ---------------------------------------------------------
-# 3. FILTER INTERAKTIF (Poin III.3)
+# 3. FILTER INTERAKTIF
 # ---------------------------------------------------------
 st.sidebar.title("🎛️ Filter Data")
 st.sidebar.markdown("---")
@@ -80,7 +70,7 @@ filtered_df = df_raw[
 ]
 
 # ---------------------------------------------------------
-# 4. HEADER & KPI CARDS (Poin III.1)
+# 4. HEADER & KPI CARDS
 # ---------------------------------------------------------
 st.title("📊 Executive Sales & Customer Analytics Dashboard")
 st.caption("Projek Ujian Tengah Semester — Mata Kuliah Visualisasi Data (UNSURYA)")
@@ -105,7 +95,7 @@ with col3:
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 5. STORYTELLING & ANALISIS WAWASAN (Poin III.5)
+# 5. STORYTELLING & ANALISIS WAWASAN
 # ---------------------------------------------------------
 st.markdown("""
 <div class="insight-box">
@@ -119,7 +109,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 6. VARIASI BAGAN / CHARTS (Poin III.2)
+# 6. VARIASI BAGAN / CHARTS
 # ---------------------------------------------------------
 c1, c2 = st.columns(2)
 
@@ -135,7 +125,7 @@ with c1:
         color_continuous_scale='Blues',
         template='plotly_white'
     )
-    st.plotly_chart(fig_bar, use_container_width=True)
+    st.plotly_chart(fig_bar, width='stretch')
 
 with c2:
     st.subheader("2. Proporsi Pesanan per Wilayah/State (Donut Chart)")
@@ -147,7 +137,7 @@ with c2:
         hole=0.4,
         color_discrete_sequence=px.colors.qualitative.Pastel
     )
-    st.plotly_chart(fig_pie, use_container_width=True)
+    st.plotly_chart(fig_pie, width='stretch')
 
 c3, c4 = st.columns(2)
 
@@ -163,7 +153,7 @@ with c3:
         color_continuous_scale='Greens',
         template='plotly_white'
     )
-    st.plotly_chart(fig_top, use_container_width=True)
+    st.plotly_chart(fig_top, width='stretch')
 
 with c4:
     st.subheader("4. Sebaran Pesanan Berdasarkan Kota (Treemap)")
@@ -175,10 +165,10 @@ with c4:
         color_continuous_scale='Viridis',
         template='plotly_white'
     )
-    st.plotly_chart(fig_tree, use_container_width=True)
+    st.plotly_chart(fig_tree, width='stretch')
 
 # ---------------------------------------------------------
 # 7. TABEL DATA MENTAH
 # ---------------------------------------------------------
 with st.expander("🔍 Lihat Data Mentah"):
-    st.dataframe(filtered_df, use_container_width=True)
+    st.dataframe(filtered_df, width='stretch')
